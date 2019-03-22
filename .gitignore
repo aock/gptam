@@ -3,3 +3,4 @@ build
 camera.cfg
 .kdev*
 gptam.kdev*
+.vscode
