@@ -9,8 +9,6 @@
 
 
 #include <cv.hpp>
-#include <highgui.hpp>
-#include <core.hpp>
 #include <cxcore.hpp>
 
 

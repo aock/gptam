@@ -15,9 +15,7 @@
 //#include <cvd/glwindow.h>
 //#include <TooN/TooN.h>
 
-#include <core.hpp>
 #include <cv.hpp>
-#include <highgui.hpp>
 
 #include <GL/gl.h>
 #include <GL/glut.h>

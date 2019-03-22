@@ -4,7 +4,6 @@
 
 #include <cxcore.hpp>
 #include <cv.hpp>
-#include <highgui.hpp>
 
 // This is mechanically generated code. 
 
