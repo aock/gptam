@@ -60,6 +60,7 @@ set(GPTAM_LIB_DEPENDENCIES
     pthread
     m
     readline
+    X11
 )
 
 add_library(gptamcore OBJECT ${GPTAM_SOURCES})
@@ -73,25 +74,19 @@ target_compile_definitions(gptam_static PRIVATE USE_XMMINTRIN=0)
 set_property(TARGET gptam_static APPEND_STRING PROPERTY COMPILE_FLAGS "-D_LINUX -Wall -std=c++14 -march=native ")
 
 
-# message(STATUS "Building shared library")
-# add_library(gptam SHARED $<TARGET_OBJECTS:gptamcore>)
-# target_link_libraries(gptam
-#     ${GPTAM_LIB_DEPENDENCIES}
-#     ${GL_LINKER_FLAGS}
-#     ${PTHREAD_PROBLEM_LINKER_FLAGS}
-# 	${GNU_READLINE_LINKER_FLAG}
-# )
+message(STATUS "Building shared library")
+add_library(gptam SHARED $<TARGET_OBJECTS:gptamcore>)
+target_link_libraries(gptam
+    ${GPTAM_LIB_DEPENDENCIES}
+)
 
-# target_compile_definitions(gptam PRIVATE USE_XMMINTRIN=0)
-# set_property(TARGET gptam APPEND_STRING PROPERTY COMPILE_FLAGS "-D_LINUX -Wall -std=c++14 -march=native ")
-# set_target_properties(gptam PROPERTIES LINK_FLAGS "-Wl,--version-script,exportmap")
+target_compile_definitions(gptam PRIVATE USE_XMMINTRIN=0)
 
-install(TARGETS gptam_static
+set_property(TARGET gptam APPEND_STRING PROPERTY COMPILE_FLAGS "-D_LINUX -Wall -std=c++14 -march=native")
+
+
+install(TARGETS gptam_static gptam
     EXPORT gptamTargets
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-
-
-
-

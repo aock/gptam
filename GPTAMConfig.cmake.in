@@ -35,7 +35,10 @@ list(APPEND GPTAM_INCLUDE_DIRS ${GLUT_INCLUDE_DIR})
 
 cmake_policy(POP)
 
-set(GPTAM_LIBRARIES
+
+option(GPTAM_USE_STATIC_LIBS OFF)
+if(GPTAM_USE_STATIC_LIBS)
+  set(GPTAM_LIBRARIES
     gptam_static
     ${OPENGL_LIBRARIES}
     ${GLUT_LIBRARIES}
@@ -44,8 +47,18 @@ set(GPTAM_LIBRARIES
     m
     readline
     X11
-)
-
-set(GPTAM_FLAGS "-D_LINUX -Wall -std=c++14 -march=native ")
+  )
+else()
+  set(GPTAM_LIBRARIES
+    gptam
+    ${OPENGL_LIBRARIES}
+    ${GLUT_LIBRARIES}
+    ${OpenCV_LIBS}
+    pthread
+    m
+    readline
+    X11
+  )
+endif()
 
 set(GPTAM_FOUND TRUE)
