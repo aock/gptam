@@ -24,4 +24,18 @@ foo@bar:~/gptam/build$ sudo make install
 ```
 
 # Library Usage
+Usage with CMake:
+After installing the gptam library, add this to your CMakeLists.txt:
+```
+find_package(GPTAM REQUIRED)
+include_directories(${GPTAM_INCLUDE_DIRS})
+
+add_executable(your_executable
+    main.cpp
+)
+
+target_link_libraries(your_executable
+    ${GPTAM_LIBRARIES}
+)
+```
 
