@@ -21,7 +21,6 @@ set(GPTAM_SOURCES
     Relocaliser.cpp
     ShiTomasi.cpp
     SmallBlurryImage.cpp
-    System.cpp
     Tracker.cpp
     VideoSource.cpp
 

@@ -7,17 +7,7 @@
 //
 //
 
-#include "gptam/System.h"
-#include "gptam/OpenGL.h"
-
-#include "gptam/Persistence/instances.h"
-
-#include <stdlib.h>
-#include "gptam/ATANCamera.h"
-#include "gptam/MapMaker.h"
-#include "gptam/Tracker.h"
-#include "gptam/ARDriver.h"
-#include "gptam/MapViewer.h"
+#include "System.h"
 
 
 using namespace std;

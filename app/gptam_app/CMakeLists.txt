@@ -1,6 +1,7 @@
 
 add_executable(gptam
     main.cpp
+    System.cpp
 )
 
 target_link_libraries(gptam

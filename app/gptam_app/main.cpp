@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "gptam/Persistence/instances.h"
-#include "gptam/System.h"
+#include <gptam/Persistence/instances.h>
+#include "System.h"
 
 using namespace std;
 using namespace gptam;

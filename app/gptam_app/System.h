@@ -11,20 +11,21 @@
 #ifndef __SYSTEM_H
 #define __SYSTEM_H
 
-#include "VideoSource.h"
-#include "GLWindow2.h"
+#include <stdlib.h>
 
-
-#include "OpenCV.h"
+#include <gptam/VideoSource.h>
+#include <gptam/GLWindow2.h>
+#include <gptam/OpenCV.h>
+#include <gptam/OpenGL.h>
+#include <gptam/Persistence/instances.h>
+#include <gptam/ATANCamera.h>
+#include <gptam/MapMaker.h>
+#include <gptam/Tracker.h>
+#include <gptam/ARDriver.h>
+#include <gptam/MapViewer.h>
 
 namespace gptam {
 
-class ATANCamera;
-class Map;
-class MapMaker;
-class Tracker;
-class ARDriver;
-class MapViewer;
 
 class System
 {
