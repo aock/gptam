@@ -124,7 +124,9 @@ flag_IsStopped = false; // just entered the main loop function
       
       CHECK_RESET;
       
+      #ifndef NDEBUG
       cout<<"DEBUG: Adjusting recent "<<endl;
+      #endif
       // Should we run local bundle adjustment?
       if(!mbBundleConverged_Recent && QueueSize() == 0)   {
 	BundleAdjustRecent();   
@@ -133,12 +135,16 @@ flag_IsStopped = false; // just entered the main loop function
 	
       
       CHECK_RESET;
+      #ifndef NDEBUG
       cout <<"DEBUG: Attempting to refind newlymade"<<endl;
+      #endif
       // Are there any newly-made map points which need more s from older key-frames?
       if(mbBundleConverged_Recent && QueueSize() == 0) ReFindNewlyMade();  
       
       CHECK_RESET;
+      #ifndef NDEBUG
       cout <<"DEBUG: Now Bundle adjusting ALL."<<endl;
+      #endif
       // Run global bundle adjustment?
       if(mbBundleConverged_Recent && !mbBundleConverged_Full && QueueSize() == 0) { 
 	BundleAdjustAll();
@@ -146,17 +152,23 @@ flag_IsStopped = false; // just entered the main loop function
       }
       
       CHECK_RESET;
+      #ifndef NDEBUG
       cout<<"DEBUG: Refinding from Failure Queue. "<<endl;
+      #endif
       // Very low priorty: re-find measurements marked as outliers
       if(mbBundleConverged_Recent && mbBundleConverged_Full && rand()%20 == 0 && QueueSize() == 0)
 	ReFindFromFailureQueue();
       //cout <<"DEBUG: handling bad points."<<endl;
       CHECK_RESET;
+      #ifndef NDEBUG
       cout <<"DEBUG: Handling bad points again...."<<endl;
+      #endif
       HandleBadPoints();
       
       CHECK_RESET;
+      #ifndef NDEBUG
       cout<<"DEBUG: Adding Keyframe from top of queue."<<endl;
+      #endif
       // Any new key-frames to be added?
       if(QueueSize() > 0) AddKeyFrameFromTopOfQueue(); // Integrate into map data struct, and process
       
@@ -328,8 +340,9 @@ cv::Vec<float, 3> MapMaker::ReconstructPoint2Views(SE3<float> se3AfromB,    // r
 	      -Q[1] * ( Q[1] * Q[5]  - Q[4] * Q[2] )  
 	      +Q[2] * ( Q[1] * Q[4]  - Q[3] * Q[2] );
   if (fabs(det) < 10E-6) {
-	      
+	  #ifndef NDEBUG
     cout << "Found degenerate/ambiguous correspondence!" <<endl;
+    #endif
     
     return cv::Vec3f(0, 0, -1); // return negative depth so that the mapmaker drops the point
   }
@@ -780,7 +793,10 @@ void MapMaker::AddKeyFrame(KeyFrame::Ptr pKF)
 // Mapmaker's code to handle incoming key-frames.
 void MapMaker::AddKeyFrameFromTopOfQueue()
 {
-  cout <<"DEBUG: Adding KF from Top of Queue"<<endl;
+  #ifndef NDEBUG
+    cout << "DEBUG: Adding KF from Top of Queue"<<endl;
+  #endif
+
   if(mvpKeyFrameQueue.size() == 0) return;
   
   KeyFrame::Ptr pKF = mvpKeyFrameQueue[0];
@@ -805,8 +821,10 @@ void MapMaker::AddKeyFrameFromTopOfQueue()
   mbBundleConverged_Full = false;
   mbBundleConverged_Recent = false;
 
-  cout <<"DEBUG: Added KF from Top of Queue!"<<endl;
-  
+  #ifndef NDEBUG
+    cout << "DEBUG: Added KF from Top of Queue!"<<endl;
+  #endif
+
 }
 
 // Tries to make a new map point out of a single candidate point
@@ -916,8 +934,9 @@ bool MapMaker::AddPointEpipolar(KeyFrame::Ptr pKFSrc,
   cv::Vec2f v2AlongProjectedLine = v2A-v2B;
   
   if( v2AlongProjectedLine.dot( v2AlongProjectedLine ) < 0.00000001 ) {
-    
+      #ifndef NDEBUG
       cout << "v2AlongProjectedLine too small." << endl;
+      #endif
       return false;
    }
    // Now we need a normal in order to search up and down
@@ -1201,12 +1220,16 @@ void MapMaker::BundleAdjustAll()
   
   // It is likely that points may not be enough...
   if (sMapPoints.size() < 6) {
+    #ifndef NDEBUG
     cout <<"DEBUG: Too few Mappoints to bundle adjust ALL: "<<sMapPoints.size()<<endl;
+    #endif
     RequestReset();
     return; 
   }    
   if (sKFs2Adjust.size() == 0) {
+    #ifndef NDEBUG
    cout <<"DEBUG: Too few KFs to bundle adjust ALL: "<<sKFs2Adjust.size()<<endl;
+    #endif
     RequestReset();
     return;
   }
@@ -1354,7 +1377,9 @@ void MapMaker::BundleAdjust(set<KeyFrame::Ptr> sAdjustSet, set<KeyFrame::Ptr> sF
     }
   
   // Run the bundle adjuster. This returns the number of successful iterations
+  #ifndef NDEBUG
   cout<<"DEBUG: Attempting BA with "<<mMap.vpPoints.size()<<" points in the map..."<<endl;
+  #endif
   int nAccepted = ba.Compute(&mbBundleAbortRequested);
   
   if(nAccepted < 0) {
@@ -1370,8 +1395,9 @@ void MapMaker::BundleAdjust(set<KeyFrame::Ptr> sAdjustSet, set<KeyFrame::Ptr> sF
 
   // Bundle adjustment did some updates, apply these to the map
   if(nAccepted > 0) {
-      
+    #ifndef NDEBUG
     cout <<"DEBUG: Updating keyframes and points after BA ..."<<endl;
+    #endif
     map<MapPoint::Ptr,int>::iterator ipMP_ID; // point-index post-BA iterator
     
     // update points
@@ -1408,7 +1434,9 @@ void MapMaker::BundleAdjust(set<KeyFrame::Ptr> sAdjustSet, set<KeyFrame::Ptr> sF
   
   // Handle outlier measurements as pairs of bundle IDs : <Mappoint Bundle ID, KF Bundle ID>:
   vector<pair<int,int> > vOutliers = ba.GetOutlierMeasurements();
+  #ifndef NDEBUG
   cout <<"DEBUG: BA left "<<vOutliers.size() << " outliers !"<<endl;
+  #endif
   
   for(unsigned int pairIndex = 0; pairIndex < vOutliers.size(); pairIndex++) {
     
@@ -1600,7 +1628,9 @@ void MapMaker::ReFindNewlyMade()
 void MapMaker::ReFindFromFailureQueue()
 {
   if(mvFailureQueue.size() == 0) return;
+  #ifndef NDEBUG
   cout<<"DEBUG: *************************************** Failure Queue Size : "<<mvFailureQueue.size()<<endl;
+  #endif
   sort(mvFailureQueue.begin(), mvFailureQueue.end());
   //vector<pair<KeyFrame::Ptr, MapPoint::Ptr> >::iterator iKF_MP;
   int nFound=0;
@@ -1612,8 +1642,9 @@ void MapMaker::ReFindFromFailureQueue()
       if (KF_MP.second.use_count()>0)
 	if( ReFind_Common( KF_MP.first, KF_MP.second ) ) nFound++;
   }
-
+  #ifndef NDEBUG
   cout <<"DEBUG: **************************** Erasing failure to the end! "<<endl;
+  #endif
   //mvFailureQueue.erase(mvFailureQueue.begin(), iKF_MP);
   mvFailureQueue.clear();
   

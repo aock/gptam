@@ -39,6 +39,8 @@ public:
   void TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame); 
 
   inline SE3<> GetCurrentPose() { return mse3CamFromWorld;}
+
+  inline cv::Vec<float, 6> GetCurrentVelocity() { return mv6CameraVelocity; }
   
   // Gets messages to be printed on-screen for the user.
   std::string GetMessageForUser();

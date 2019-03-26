@@ -21,7 +21,9 @@ SE3<> Relocaliser::BestPose()
 }
 
 bool Relocaliser::AttemptRecovery(KeyFrame::Ptr pKFCurrent) {
+  #ifndef NDEBUG
   cout <<"DEBUG: ========================================== Attempting Recovery!!!!"<<endl;
+  #endif
   // Ensure the incoming frame has a SmallBlurryImage attached
   if(!pKFCurrent->pSBI)
     pKFCurrent->pSBI = new SmallBlurryImage(*pKFCurrent);

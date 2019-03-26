@@ -198,6 +198,11 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
 	    //	    mMessageForUser << " Found " << mnMeasFound << " of " << mnMeasAttempted <<". (";
 	    mMessageForUser << " Map: " << mMap.vpPoints.size() << "P, " << mMap.vpKeyFrames.size() << "KF";
 	    
+    auto angles = GetCurrentPose().get_rotation().ln();
+    auto pos = GetCurrentPose().get_translation();
+
+    // cout << "Current Pose: " << pos << " | " << angles << endl;
+    mMessageForUser << "Pose: " << pos << angles << std::endl;
 	}
 	  
 	// Heuristics to check if a key-frame should be added to the map:
