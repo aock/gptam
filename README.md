@@ -14,7 +14,7 @@ This fork makes some changes of code structure to use gptam as c++ library.
 # Build
 ```console
 foo@bar:~/gptam$ mkdir build
-foo@bar:~/gptam/build$ cmake ..
+foo@bar:~/gptam/build$ cmake .. -DCMAKE_BUILD_TYPE=Release
 foo@bar:~/gptam/build$ make
 ```
 
@@ -22,5 +22,6 @@ foo@bar:~/gptam/build$ make
 ```console
 foo@bar:~/gptam/build$ sudo make install
 ```
+
 # Library Usage
 
