@@ -33,4 +33,5 @@ include_directories(include)
 add_subdirectory(src/gptam)
 
 ########## GPTAM APP  ###################
-add_subdirectory(app)
+add_subdirectory(app/gptam_app)
+add_subdirectory(app/gptam_camera_calibrator)

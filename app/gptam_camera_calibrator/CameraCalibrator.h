@@ -4,16 +4,18 @@
 #ifndef __CAMERACALIBRATOR_H
 #define __CAMERACALIBRATOR_H
 
-#include "gptam/CalibImage.h"
-#include "gptam/VideoSource.h"
-
-
+#include <fstream>
+#include <stdlib.h>
 #include <vector>
-#include "gptam/GLWindow2.h"
 
-#include "gptam/OpenCV.h"
-
-#include "gptam/ATANCamera.h"
+#include <gptam/OpenCV.h>
+#include <gptam/OpenGL.h>
+#include <gptam/Persistence/instances.h>
+#include <gptam/ATANCamera.h>
+#include <gptam/GCVD/GLHelpers.h>
+#include <gptam/CalibImage.h>
+#include <gptam/VideoSource.h>
+#include <gptam/GLWindow2.h>
 
 namespace gptam {
 
