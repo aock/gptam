@@ -35,3 +35,38 @@ add_subdirectory(src/gptam)
 ########## GPTAM APP  ###################
 add_subdirectory(app/gptam_app)
 add_subdirectory(app/gptam_camera_calibrator)
+
+
+########## CMAKE FILES #################
+#####################################################
+
+install(EXPORT gptamTargets
+    FILE gptamTargets.cmake
+    NAMESPACE gptam::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/gptam)
+
+include(CMakePackageConfigHelpers)
+set(INCLUDE_INSTALL_DIR include/)
+set(LIB_INSTALL_DIR lib/)
+set(SYSCONFIG_INSTALL_DIR etc/gptam/)
+
+configure_package_config_file(GPTAMConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/GPTAMConfig.cmake
+  INSTALL_DESTINATION ${LIB_INSTALL_DIR}/cmake/gptam
+  PATH_VARS INCLUDE_INSTALL_DIR SYSCONFIG_INSTALL_DIR
+)
+
+write_basic_package_version_file(
+  ${CMAKE_CURRENT_BINARY_DIR}/GPTAMConfigVersion.cmake
+  COMPATIBILITY SameMajorVersion
+)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/GPTAMConfig.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/GPTAMConfigVersion.cmake
+              DESTINATION ${LIB_INSTALL_DIR}/cmake/gptam )
+
+# install(FILES
+#     CMakeModules/FindEigen3.cmake
+#     CMakeModules/FindNabo.cmake
+#     CMakeModules/FindSTANN.cmake
+#     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/lvr2/Modules)
