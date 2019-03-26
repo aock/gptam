@@ -23,6 +23,8 @@
 #include <sstream>
 #include "serialize.h"
 
+namespace gptam {
+
 namespace Persistence {
 
 	std::string UncommentString(std::string s);
@@ -37,8 +39,8 @@ namespace Persistence {
 		return n;
 	}
 
-}
+} // namespace Persistence
 
-
+} // namespace gptam
 
 #endif

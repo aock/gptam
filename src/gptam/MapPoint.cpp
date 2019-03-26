@@ -8,6 +8,8 @@
 #include "gptam/MapPoint.h"
 #include "gptam/KeyFrame.h"
 
+namespace gptam {
+
 void MapPoint::RefreshPixelVectors() {
   // Get the KF in which the patch was originally found
   // (i.e., a "home" KF )
@@ -59,3 +61,5 @@ void MapPoint::RefreshPixelVectors() {
   v3PixelGoRight_W = Rt * (v3OneRightOnPlane_C - v3CenterOnPlane_C);
   v3PixelGoDown_W = Rt * (v3OneDownOnPlane_C - v3CenterOnPlane_C);
 }  
+
+} // namespace gptam

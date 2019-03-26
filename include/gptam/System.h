@@ -17,6 +17,8 @@
 
 #include "OpenCV.h"
 
+namespace gptam {
+
 class ATANCamera;
 class Map;
 class MapMaker;
@@ -48,6 +50,6 @@ private:
   static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
 };
 
-
+} // namespace gptam
 
 #endif

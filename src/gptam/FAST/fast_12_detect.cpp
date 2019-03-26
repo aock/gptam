@@ -8,6 +8,9 @@
 // This is mechanically generated code. 
 
 using namespace std;
+
+namespace gptam {
+
 namespace FAST
 {
 //void fast_corner_detect_plain_12(const BasicImage<byte>& i, vector<ImageRef>& corners, int b)
@@ -2265,4 +2268,7 @@ void fast_corner_detect_plain_12(const cv::Mat_<uchar> &i, vector<cv::Point2i> &
 		} // end cache for (cols)
 	} // end y for (rows)
 }
-}
+
+} // namespace FAST
+
+} // namespace gptam

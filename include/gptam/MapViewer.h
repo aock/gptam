@@ -20,6 +20,7 @@
 #include "OpenCV.h"
 #include "OpenGL.h"
 
+namespace gptam {
 
 using namespace RigidTransforms;
 
@@ -48,5 +49,7 @@ protected:
 
   std::ostringstream mMessageForUser;
 };
+
+} // namespace gptam
 
 #endif

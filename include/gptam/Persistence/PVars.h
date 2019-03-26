@@ -13,7 +13,9 @@
 #include "type_name.h"
 #include "serialize.h"
 
-namespace Persistence 
+namespace gptam {
+
+namespace Persistence
 {
   
   void parse_warning(int e, std::string type, std::string name, std::string from);
@@ -632,5 +634,7 @@ class GVars2
 
 */
 
-}
+} // namespace Persistence
+
+} // namespace gptam
 #endif

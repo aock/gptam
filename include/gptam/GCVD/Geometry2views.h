@@ -12,6 +12,8 @@
 
 #include <math.h>
 
+namespace gptam {
+
 namespace TwoViewGeometry {
   
   /// Horn's relative pose extraction from an essential matrix
@@ -202,7 +204,8 @@ namespace TwoViewGeometry {
   }
   
   
-} // End the namespace clause
+} // namespace TwoViewGeometry
 
+} // namespace gptam
 
 #endif

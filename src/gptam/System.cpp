@@ -21,6 +21,9 @@
 
 
 using namespace std;
+
+namespace gptam {
+
 using namespace Persistence;
 
 
@@ -132,7 +135,7 @@ void System::GUICommandCallBack(void *ptr, string sCommand, string sParams)
 
 
 
-
+} // namespace gptam 
 
 
 

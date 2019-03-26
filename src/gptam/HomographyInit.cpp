@@ -15,6 +15,9 @@
 #include "gptam/MEstimator.h"
 
 using namespace std;
+
+namespace gptam {
+
 //using namespace Optimization;
 
 
@@ -983,4 +986,4 @@ void HomographyInit::ChooseBestDecomposition()
   cout << "OLE! Just puicked a SE3 from first to second! "<<endl;
 }
 
-
+} // namespace gptam

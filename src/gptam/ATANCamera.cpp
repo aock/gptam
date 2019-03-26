@@ -13,6 +13,8 @@
 
 
 using namespace std;
+
+namespace gptam {
 using namespace Persistence;
 
 // Quick description of the parameters:
@@ -407,3 +409,4 @@ cv::Vec2f ATANCamera::UFBUnProject(const cv::Matx<float, 2, 1> &v2Im)
 }
 
 
+} // namespace gptam

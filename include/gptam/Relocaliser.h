@@ -20,6 +20,7 @@
 
 #include "Map.h"
 
+namespace gptam {
 
 class Relocaliser
 {
@@ -38,6 +39,9 @@ protected:
   SE3<> mse3Best;
 
 };
+
+} // namespace gptam
+
 #endif
 
 

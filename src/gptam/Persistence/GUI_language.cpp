@@ -11,6 +11,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence
 {
 
@@ -234,4 +236,6 @@ namespace Persistence
 		delete l;
 	}
 	//GUI_language GUI_language_instance;
-}
+} // namespace Persistence
+
+} // namespace gptam

@@ -35,6 +35,8 @@
 #include <set>
 #include <list>
 
+namespace gptam {
+
 using namespace RigidTransforms;
 
 // An index into the big measurement map which stores all the measurements.
@@ -167,7 +169,7 @@ protected:
 };
 
 
-
+} // namespace gptam
 
 
 #endif

@@ -5,6 +5,8 @@
 
 #include "../OpenCV.h"
 
+namespace gptam {
+
 namespace FAST
 {
 	using namespace std;
@@ -23,7 +25,9 @@ namespace FAST
    
     void fast_corner_detect_plain_12(const cv::Mat_<uchar> &i, vector<cv::Point2i> &corners, int b);
     int fast_corner_score_12(const uchar* cache_0, const int offset[], int b);
-}
+} // namespace FAST
+
+} // namespace gptam
 
 
 #endif

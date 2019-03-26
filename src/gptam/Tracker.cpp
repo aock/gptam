@@ -31,6 +31,9 @@
 #include <unistd.h>
 
 using namespace std;
+
+namespace gptam {
+
 using namespace Persistence;
 
 
@@ -1228,7 +1231,7 @@ void Tracker::CalcSBIRotation() {
 cv::Size2i TrackerData::irImageSize;  // Static member of TrackerData lives here
 
 
-
+} // namespace gptam
 
 
 

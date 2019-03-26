@@ -8,6 +8,8 @@
 #include <memory> 
 #include "../OpenCV.h"
 
+namespace gptam {
+
 namespace Persistence
 {
   
@@ -204,5 +206,7 @@ template<class C> struct ValueHolder<C, 1>
 };
 
 }
+
+} // namespace gptam
 
 #endif

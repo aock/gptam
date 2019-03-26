@@ -25,6 +25,8 @@
 
 #include "OpenCV.h"
 
+namespace gptam {
+
 using namespace RigidTransforms;
 
 // Homography matches are 2D-2D matches expressed in normazlied Euclidean coordinates
@@ -83,6 +85,6 @@ protected:
   std::vector<HomographyDecomposition> mvDecompositions;
 };
 
-
+} // namespace gptam
 
 #endif

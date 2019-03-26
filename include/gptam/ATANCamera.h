@@ -56,6 +56,7 @@
 
 #define NUMTRACKERCAMPARAMETERS 5
 
+namespace gptam {
 
 class CameraCalibrator;
 class CalibImage;
@@ -284,6 +285,6 @@ inline cv::Vec2f ATANCamera::UFBLinearUnProject(const cv::Matx<float, 2, 1> &fbf
   return v2Res;
 }
 
+} // namespace gptam
 
 #endif
-

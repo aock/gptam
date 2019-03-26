@@ -19,6 +19,8 @@
 #include <deque>
 #include <chrono>
 
+namespace gptam {
+
 namespace CvUtils {
 
 
@@ -175,5 +177,7 @@ class SimpleTimer
 };
 
 }
+
+} // namespace gptam 
 
 #endif

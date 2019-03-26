@@ -5,6 +5,7 @@
 //#include <X11/keysym.h>
 //#include <GL/glx.h>
 
+namespace gptam {
 
 GLXInterface::Exceptions::GLWindow::CreationError::CreationError(std::string w)
 {
@@ -363,3 +364,5 @@ void GLXInterface::GLWindow::activate()
     if (glXMakeCurrent(state->display, state->window, state->context) == False)
 	throw Exceptions::GLWindow::RuntimeError("glXMakeCurrent failed");
 }
+
+} // namespace gptam

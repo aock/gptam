@@ -14,6 +14,9 @@
 #include "gptam/OpenCV.h"
 
 using namespace std;
+
+namespace gptam {
+
 using namespace Persistence;
 using namespace FAST;
 
@@ -164,9 +167,4 @@ struct LevelHelpersFiller // Code which should be initialised on init goes here;
 
 static LevelHelpersFiller foo;
 
-
-
-
-
-
-
+} // namespace gptam

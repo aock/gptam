@@ -25,6 +25,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+namespace gptam {
 
 namespace Persistence
 {
@@ -112,7 +113,8 @@ namespace Persistence
 	};
 
 
+} // namespace Persistence
 
-}
+} // namespace gptam
 
 #endif

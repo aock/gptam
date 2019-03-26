@@ -19,6 +19,8 @@
 #include "GCVD/SE3.h"
 #include "OpenGL.h"
 
+namespace gptam {
+
 using namespace RigidTransforms;
 
 class EyeGame
@@ -45,5 +47,6 @@ class EyeGame
 
 };
 
+} // namespace gptam
 
 #endif

@@ -11,6 +11,8 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 
+namespace gptam {
+
 namespace GLXInterface {
 
     namespace Exceptions
@@ -171,7 +173,8 @@ namespace GLXInterface {
     };
 
 
-}
+} // namespace GLXInterface
 
+} // namespace gptam
 
 #endif

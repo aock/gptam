@@ -11,8 +11,9 @@
 #include <cv.hpp>
 #include <cxcore.hpp>
 
-
 #include "GCVD/Addedutils.h"
+
+namespace gptam {
 
 class CalibCornerPatch
 {
@@ -48,7 +49,7 @@ public:
   float mdLastError;
 };
 
-
+} // namespace gptam
 
 
 #endif

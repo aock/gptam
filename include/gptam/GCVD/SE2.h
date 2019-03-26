@@ -16,6 +16,7 @@
 
 #include "../OpenCV.h"
 
+namespace gptam {
 
 namespace RigidTransforms {
 
@@ -496,5 +497,6 @@ inline RigidTransforms::SE2<Precision> operator *(const RigidTransforms::SO2<Pre
   return RigidTransforms::SE2<Precision>( so2*se2.get_rotation(), so2.get_matrix()*se2.get_translation() );
 }
 
+} // namespace gptam
 
 #endif

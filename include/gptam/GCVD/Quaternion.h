@@ -17,6 +17,8 @@
 #include <assert.h>
 #include <iostream>
 
+namespace gptam {
+
 namespace RigidTransforms {
 
 typedef enum {QUATERNION_MRPs = 0, QUATERNION_AA, QUATERNION_GIBBS} QPARAM_TYPE;
@@ -1952,5 +1954,6 @@ template<typename P = float>
 
 }
 
+} // namespace gptam
 
 #endif

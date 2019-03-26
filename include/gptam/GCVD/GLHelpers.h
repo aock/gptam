@@ -19,8 +19,9 @@
 #include "SE3.h"
 #include "SO2.h"
 
-using namespace RigidTransforms;
+namespace gptam {
 
+using namespace RigidTransforms;
 
 namespace GLXInterface
 {
@@ -642,7 +643,9 @@ namespace GLXInterface
 	
 
 	
-} // END namespace
+} // namespace GLXInterface
+
+} // namespace gptam
 	
 
 #endif

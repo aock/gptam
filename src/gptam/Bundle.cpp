@@ -13,9 +13,12 @@
 
 #include "gptam/Persistence/instances.h"
 
+using namespace std;
+
+namespace gptam {
 //using namespace Optimization;
 using namespace Persistence;
-using namespace std;
+
 
 #ifdef WIN32
 inline bool isnan(double d) {return !(d==d);}
@@ -782,11 +785,4 @@ vector<pair<int, int> > Bundle::GetOutlierMeasurements()
   return mvOutlierMeasurementIdx;
 }
 
-
-
-
-
-
-
-
-
+} // namespace gptam

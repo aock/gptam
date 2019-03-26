@@ -7,6 +7,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace FAST
 {
 
@@ -165,4 +167,6 @@ void nonmax_suppression_with_scores(const vector<cv::Point2i> &corners, const ve
 	nonmax_suppression_t<int, pair<cv::Point2i,int> , collect_score, Greater>(corners, scores, nonmax_corners);
 }
 
-}
+} // namespace FAST
+
+} // namespace gptam

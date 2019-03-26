@@ -20,6 +20,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence 
 {
  
@@ -70,4 +72,6 @@ void GUI_impl::StopParserThread()
   }
 
 
-}
+} // namespace Persistence
+
+} // namespace gptam

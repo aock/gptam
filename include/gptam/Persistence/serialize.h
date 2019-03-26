@@ -14,6 +14,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence
 {
   
@@ -283,8 +285,10 @@ namespace Persistence
 			return check_stream(is);
 		}
 
-	}
-}
+	} // namespace Serialize
 
+} // namespace Persistence
+
+} // namespace gptam
 
 #endif

@@ -14,6 +14,8 @@
 
 #include "OpenCV.h"
 
+namespace gptam {
+
 const int N_NOT_TRIED=-1;
 const int N_FAILED=-2;
 
@@ -74,7 +76,7 @@ protected:
  
 };
 
-
+} // namespace gptam
 
 
 #endif

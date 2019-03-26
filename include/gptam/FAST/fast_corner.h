@@ -7,6 +7,8 @@
 
 #include "../OpenCV.h"
 
+namespace gptam {
+
 namespace FAST
 {
   
@@ -171,5 +173,7 @@ namespace FAST
 	///
 	extern const cv::Point2i fast_pixel_ring[16];
 }
+
+} // namespace gptam
 
 #endif

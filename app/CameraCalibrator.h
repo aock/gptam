@@ -15,6 +15,7 @@
 
 #include "gptam/ATANCamera.h"
 
+namespace gptam {
 
 class CameraCalibrator
 {
@@ -22,8 +23,6 @@ public:
   
   CameraCalibrator();
   void Run();
-  
-  
   
 protected:
   
@@ -54,5 +53,7 @@ protected:
   static void GUICommandCallBack(void* ptr, std::string sCommand, std::string sParams);
   
 };
+
+} // namespace gptam
 
 #endif

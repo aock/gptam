@@ -13,6 +13,8 @@
 
 //#include "scalar_convert.h"
 
+namespace gptam {
+
 namespace CvUtils {
   
   
@@ -711,10 +713,8 @@ inline const cv::Mat_<P> mat2Vec(const cv::Vec<P, Sz> &v) {
   return ret;
 }
 
+} // namespace CvUtils
 
-}
-
-
-
+} // namespace gptam 
 
 #endif

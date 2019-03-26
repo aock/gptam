@@ -12,6 +12,7 @@
 #include "gptam/System.h"
 
 using namespace std;
+using namespace gptam;
 using namespace Persistence;
 
 int main(int argc, char** argv)

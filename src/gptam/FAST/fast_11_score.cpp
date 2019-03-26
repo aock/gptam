@@ -6,6 +6,9 @@
 // This is mechanically generated code. 
 
 using namespace std;
+
+namespace gptam {
+
 namespace FAST
 {
 
@@ -2600,4 +2603,6 @@ void fast_corner_score_11(const cv::Mat_<uchar> &i, const vector<cv::Point2i> &c
 		scores[n] = fast_corner_score_11(i.ptr<uchar>(corners[n].y, corners[n].x), pixel, b);
 }
 
-}
+} // namespace FAST
+
+} // namespace gptam

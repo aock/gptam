@@ -11,6 +11,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence 
 {
 
@@ -216,4 +218,6 @@ char * GUI_impl::ReadlineCommandGenerator(const char *szText, int nState)
   
 };
 
-}
+} // namespace Persistence
+
+} // namespace gptam

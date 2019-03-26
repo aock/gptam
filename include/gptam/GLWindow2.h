@@ -25,6 +25,7 @@
 
 //#include "GLWindowMenu.h"
 
+namespace gptam {
 
 using namespace GLXInterface;
 
@@ -101,11 +102,6 @@ protected:
 
 };
 
-
-
-
-
-
-
+} // namespace gptam
 
 #endif

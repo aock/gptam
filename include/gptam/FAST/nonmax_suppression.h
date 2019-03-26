@@ -6,7 +6,7 @@
 
 #include "../OpenCV.h"
 
-
+namespace gptam {
 
 namespace FAST
 {
@@ -34,6 +34,8 @@ namespace FAST
 	*/
 	void nonmax_suppression_with_scores(const std::vector<cv::Point2i>& corners, const std::vector<int>& scores, std::vector<std::pair<cv::Point2i,int> > &max_corners);
 
-}
+} // namespace FAST
+
+} // namespace gptam
 
 #endif

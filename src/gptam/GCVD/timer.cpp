@@ -16,6 +16,8 @@
 using namespace  std;
 using namespace  std::chrono;
 
+namespace gptam {
+
 namespace CvUtils {
 
 
@@ -63,4 +65,6 @@ double Timer::conv_ntime(const double & time) const
 
 Timer timer;
 
-}
+} // namespace CvUtils
+
+} // namespace gptam

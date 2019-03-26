@@ -17,6 +17,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace GLXInterface {
 
 
@@ -134,4 +136,6 @@ std::pair<double, double> glGetExtends(const std::string & text, double spacing,
     return std::make_pair(max_total, (lines+1)*spacing);
 }
 
-}
+} // namespace GLXInterface
+
+} // namespace gptam

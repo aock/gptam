@@ -3,6 +3,8 @@
 
 #include <string>
 
+namespace gptam {
+
 // This file is small, but due to static emmebrs, requires a .cpp, hence the GUI_readline.cpp
 namespace Persistence
 {
@@ -36,5 +38,8 @@ namespace Persistence
 
 
 	};
-};
+
+} // namespace Persistence
+
+} // namespace gptam
 #endif

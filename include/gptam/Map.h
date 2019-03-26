@@ -15,6 +15,8 @@
 
 #include <memory>
 
+namespace gptam {
+
 struct MapPoint;
 struct KeyFrame;
 
@@ -41,8 +43,7 @@ struct Map
   bool bGood;
 };
 
-
-
+} // namespace gptam
 
 #endif
 

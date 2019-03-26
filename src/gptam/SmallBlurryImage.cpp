@@ -10,9 +10,13 @@
 #include "gptam/GCVD/GraphSLAM.h"
 #include "gptam/GCVD/Addedutils.h"
 
+using namespace std;
+
+namespace gptam {
+
 using namespace RigidTransforms;
 using namespace Optimization;
-using namespace std;
+
 
 cv::Size2i SmallBlurryImage::mirSize(-1,-1);
 
@@ -443,7 +447,7 @@ SE3<> SmallBlurryImage::SE3fromSE2(SE2<> se2, ATANCamera camera)
 
 
 
-
+} // namespace gptam
 
 
 

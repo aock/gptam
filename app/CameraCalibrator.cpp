@@ -16,12 +16,9 @@
 #include "gptam/GCVD/GLHelpers.h"
 
 
-
 using namespace std;
+using namespace gptam;
 using namespace Persistence;
-
-
-
 
 int main()
 {
@@ -61,11 +58,6 @@ int main()
       cout <<"At line : " << e.line << endl << e.msg << endl;
     }
 }
-
-
-
-
-
 
 
 CameraCalibrator::CameraCalibrator() : mGLWindow(mVideoSource.getSize(), "Camera Calibrator"), mCamera("Camera", mVideoSource.getSize())

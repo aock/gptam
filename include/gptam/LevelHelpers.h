@@ -15,6 +15,8 @@
 
 #include "OpenCV.h"
 
+namespace gptam {
+
 // Set of global colours useful for drawing stuff:
 extern cv::Vec3f gavLevelColors[];
 // (These are filled in in KeyFrame.cpp)
@@ -58,5 +60,7 @@ inline cv::Vec2f LevelNPos(cv::Vec2f v2RootPos, int nLevel)
 		   LevelNPos(v2RootPos[1], nLevel) );
   return v2Ans;
 }
+
+} // namespace gptam
 
 #endif

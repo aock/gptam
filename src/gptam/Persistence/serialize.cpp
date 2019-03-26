@@ -5,6 +5,7 @@
 
 using namespace std;
 
+namespace gptam {
 
 namespace Persistence
 {
@@ -95,7 +96,8 @@ namespace Persistence
 		return 0;
 	}
 
-}
+} // namespace Serialize
 
+} // namespace Persistence
 
-}
+} // namespace gptam

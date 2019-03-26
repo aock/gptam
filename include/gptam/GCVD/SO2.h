@@ -8,6 +8,7 @@
 
 #include <math.h>
 
+namespace gptam {
 
 namespace RigidTransforms {
 
@@ -246,6 +247,6 @@ inline cv::Matx<typename MyOperatorOverloads::MultiplyType<PM,P>::type, R, 2> op
   return M * so2.get_matrix();
 }
 
-
+} // namespace gptam
 
 #endif

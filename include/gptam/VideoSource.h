@@ -11,10 +11,13 @@
 // format as an ImageRef, and GetAndFillFrameBWandRGB should wait for
 // a new frame and then overwrite the passed-as-reference images with
 // GreyScale and Colour versions of the new frame.
+#pragma once
 
 #include "OpenCV.h"
 
 using namespace cv;
+
+namespace gptam {
 
 struct VideoSourceData;
 
@@ -32,3 +35,5 @@ class VideoSource
   
   cv::Size2i mirSize;
 };
+
+} // namespace gptam

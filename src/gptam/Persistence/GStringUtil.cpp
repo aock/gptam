@@ -2,6 +2,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence 
 {
 
@@ -72,4 +74,6 @@ vector<string> ChopAndUnquoteString(string s)
     }
 };
 
-}
+} // namespace Persistence
+
+} // namespace gptam

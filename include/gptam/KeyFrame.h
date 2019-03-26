@@ -31,8 +31,9 @@
 #include <map>
 #include <memory>
 
-using namespace RigidTransforms;
+namespace gptam {
 
+using namespace RigidTransforms;
 
 struct MapPoint;
 class SmallBlurryImage;
@@ -117,6 +118,7 @@ public:
 
 typedef std::map<std::shared_ptr<MapPoint>, KFMeasurement>::iterator meas_it;  // For convenience, and to work around an emacs paren-matching bug
 
+} // namespace gptam
 
 #endif
 

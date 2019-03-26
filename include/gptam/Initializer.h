@@ -16,6 +16,8 @@
 
 #include "OpenCV.h"
 
+namespace gptam {
+
 using namespace RigidTransforms;
 
 // The 2D matches (points/lines) in thw two camera views
@@ -44,6 +46,6 @@ protected:
  
 };
 
-
+} // namespace gptam
 
 #endif

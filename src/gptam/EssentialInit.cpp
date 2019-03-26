@@ -23,6 +23,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 
 // This function marks a homography match as inliner by simply checking if 
 // the first point is projected to a second point with error below the MLESAC threshold...
@@ -845,4 +847,4 @@ static double SampsonusError(cv::Vec<float, 2> &v2Dash, const cv::Matx<float, 3,
 			     fTv3DashSlice[0] * fTv3DashSlice[0] + fTv3DashSlice[1] * fTv3DashSlice[1] );
 }
 
-
+} // namespace gptam

@@ -12,6 +12,8 @@
 
 #include "../OpenCV.h"
 
+namespace gptam {
+
 using namespace CvUtils;
 using namespace MyOperatorOverloads;
 
@@ -513,6 +515,6 @@ inline cv::Matx<typename MyOperatorOverloads::MultiplyType<PM, P>::type, Rows, 3
 }
 
 
-
+} // namespace gptam
 
 #endif

@@ -45,6 +45,8 @@
 #include "MapPoint.h"
 #include "LevelHelpers.h"
 
+namespace gptam {
+
 using namespace RigidTransforms;
 
 class PatchFinder
@@ -140,6 +142,8 @@ protected:
   MapPoint::Ptr mpLastTemplateMapPoint;  // Which was the last map point this PatchFinder used?
   cv::Matx<float, 2, 2> mm2LastWarpMatrix;       // What was the last 2x2 warp matrix this PatchFinder used?
 };
+
+} // namespace gptam
 
 #endif
 

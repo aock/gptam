@@ -13,7 +13,7 @@
 
 #include "../OpenCV.h"
 
-
+namespace gptam {
 
 namespace RigidTransforms {
 
@@ -160,7 +160,7 @@ public:
 
 }; // *************** Class SE3 Ends Here - Class SE3 Ends Here - Class SE3 Ends Here ******************
 
-}; // ************ Close RigidTransforms temporarily in order to define additional Operator specializations!!!! *****
+} // ************ Close RigidTransforms temporarily in order to define additional Operator specializations!!!! *****
 
 // transfers a vector in the Lie algebra
 // from one coord frame to another
@@ -650,6 +650,8 @@ inline RigidTransforms::SE3<Precision> operator *(const RigidTransforms::SO3<Pre
 
 
 
-//} // close rigidTransforms
+//} // namespace rigidTransforms
+
+} // namespace gptam
 
 #endif

@@ -16,6 +16,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 using namespace FAST;
 using namespace CvUtils;
 using namespace RigidTransforms;
@@ -975,9 +977,4 @@ vector<CalibImage::ErrorAndJacobians> CalibImage::Project(ATANCamera &Camera) {
   return vResult;
 }
 
-
-
-
-
-
-
+} // namespace gptam

@@ -8,8 +8,10 @@
 #include "gptam/Persistence/GStringUtil.h"
 #include <sstream>
 
-using namespace Persistence;
 using namespace std;
+
+namespace gptam {
+using namespace Persistence;
 
 GLWindowMenu::GLWindowMenu(string sName, string sTitle)
 {
@@ -317,8 +319,4 @@ bool GLWindowMenu::HandleClick(int nMouseButton, int state, int x, int y)
   
 };
 
-
-
-
-
-
+} // namespace gptam

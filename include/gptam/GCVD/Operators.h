@@ -15,6 +15,7 @@ using namespace std;
 using namespace cv;
 
 
+namespace gptam {
 
 namespace MyOperatorOverloads {
 
@@ -722,6 +723,6 @@ cv::Vec<typename MyOperatorOverloads::MultiplyType<PV, PM>::type, R> operator *(
 }*/
 
 
-
+} // namespace gptam
 
 #endif

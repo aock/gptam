@@ -16,6 +16,8 @@
 #include <set>
 #include <memory>
 
+namespace gptam {
+
 struct KeyFrame;
 struct TrackerData;
 struct MapMakerData;
@@ -80,5 +82,7 @@ public:
   // Random junk (e.g. for visualisation)
   double dCreationTime; //timer.get_time() time of creation
 };
+
+} // namespace gptam
 
 #endif

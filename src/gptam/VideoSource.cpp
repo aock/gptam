@@ -9,7 +9,7 @@
 
 using namespace std;
 
-
+namespace gptam {
 
 
 // For the time being, I am implementing webcam live capture.... All being well, more will follow...
@@ -66,4 +66,4 @@ void VideoSource::GetAndFillFrameBWandRGB(cv::Mat_<uchar> &imBW, cv::Mat &imRGB)
   
 }
 
-
+} // namespace gptam 

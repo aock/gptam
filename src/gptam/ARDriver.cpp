@@ -11,9 +11,10 @@
 
 #include "gptam/Persistence/instances.h"
 
-
-using namespace Persistence;
 using namespace std;
+
+namespace gptam {
+using namespace Persistence;
 
 static bool CheckFramebufferStatus();
 
@@ -288,9 +289,4 @@ void ARDriver::DrawFadingGrid()
     }
 }
 
-
-
-
-
-
-
+} // namespace gptam

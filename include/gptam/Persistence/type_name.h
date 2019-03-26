@@ -23,6 +23,8 @@
 
 #include "default.h"
 
+namespace gptam {
+
 namespace Persistence
 {
 
@@ -74,8 +76,8 @@ namespace Persistence
 	
 
 
-}
+} // namespace Persistence
 
-
+} // namespace gptam
 
 #endif

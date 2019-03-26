@@ -25,6 +25,7 @@
 
 using namespace std;
 
+namespace gptam {
 
 class ARDriver
 {
@@ -56,4 +57,7 @@ class ARDriver
   // Eyeballs:
   EyeGame mGame;
 };
+
+} // namespace gptam
+
 #endif

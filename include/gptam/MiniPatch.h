@@ -18,6 +18,8 @@
 
 #include <vector>
 
+namespace gptam {
+
 struct MiniPatch
 {
   // lift a ptach verbatim from source image "im"
@@ -40,6 +42,6 @@ struct MiniPatch
   
 };
 
-
+} // namespace gptam
 
 #endif

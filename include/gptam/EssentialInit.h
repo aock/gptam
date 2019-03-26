@@ -24,9 +24,7 @@
 
 #include <vector>
 
-
-
-
+namespace gptam {
 
 using namespace RigidTransforms;
 
@@ -98,6 +96,6 @@ protected:
   std::vector<EssentialRelativePose> mvRelPoses;
 };
 
-
+} // namespace gptam
 
 #endif

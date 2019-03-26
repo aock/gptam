@@ -20,6 +20,7 @@
 #include <vector>
 #include <list>
 
+namespace gptam {
 
 class TrackerData;
 
@@ -127,10 +128,6 @@ protected:
   std::vector<Command> mvQueuedCommands;
 };
 
+} // namespace gptam 
+
 #endif
-
-
-
-
-
-

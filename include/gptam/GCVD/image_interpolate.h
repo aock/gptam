@@ -8,6 +8,8 @@
 
 #include <math.h>
 
+namespace gptam {
+
 namespace CvUtils
 {
 	///Classes used to specify the interpolation type
@@ -29,7 +31,7 @@ namespace CvUtils
 		//    This algorithm is described in http://astronomy.swin.edu.au/~pbourke/colour/bicubic/ 
 		
 		class Bicubic{};
-	};
+	} // namespace Interpolate
 
 
 	// decided that interpolation values are always single precision and that's it.
@@ -271,6 +273,8 @@ namespace CvUtils
 	};
 	
 
-}
+} // namespace CvUtils
+
+} // namespace gptam
 
 #endif

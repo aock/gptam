@@ -16,6 +16,9 @@
 #endif
 
 using namespace std;
+
+namespace gptam {
+
 // Note that the patchfinder sets-up an 8x8 patch by default which is a brand new empty thing....
 PatchFinder::PatchFinder(int nPatchSize) : mimTemplate( cv::Mat_<uchar>(nPatchSize, nPatchSize) ) {
   
@@ -741,8 +744,4 @@ int PatchFinder::ZMSSDAtPoint(const cv::Mat_<uchar> &im, const cv::Point2i &ir) 
   return ( (2*SA*SB - SA*SA - SB*SB)/N + nImageSumSq + mnTemplateSumSq - 2*nCrossSum );
 }
 
-
-
-
-
-
+} // namespace gptam

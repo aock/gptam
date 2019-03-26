@@ -13,13 +13,16 @@
 #include "gptam/Persistence/GStringUtil.h"
 #include "gptam/Persistence/instances.h"
 
-
-using namespace std;
-using namespace GLXInterface;
-using namespace Persistence;
-
 #include <GL/gl.h>
 #include <GL/glut.h>
+
+
+using namespace std;
+
+namespace gptam {
+
+using namespace GLXInterface;
+using namespace Persistence;
 
 GLWindow2::GLWindow2(cv::Size2i irSize, string sTitle) : GLWindow(irSize, sTitle)
 {
@@ -116,7 +119,7 @@ void GLWindow2::SetupUnitOrtho()
 {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0,1,1,0,0,1);
+  ::glOrtho(0,1,1,0,0,1);
 }
 
 void GLWindow2::SetupWindowOrtho()
@@ -136,7 +139,7 @@ void GLWindow2::SetupVideoOrtho()
 {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(-0.5,(double)mirVideoSize.width - 0.5, (double)mirVideoSize.height - 0.5, -0.5, -1.0, 1.0);
+  ::glOrtho(-0.5,(double)mirVideoSize.width - 0.5, (double)mirVideoSize.height - 0.5, -0.5, -1.0, 1.0);
 }
 
 void GLWindow2::SetupVideoRasterPosAndZoom()
@@ -338,3 +341,4 @@ void GLWindow2::on_key_down(GLWindow&, int k)
 }
 #endif
 
+} // namespace gptam

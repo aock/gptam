@@ -13,6 +13,8 @@
 #include "mono.h"
 #include "serif.h"
 
+namespace gptam {
+
 namespace GLXInterface {
 
  
@@ -39,7 +41,8 @@ struct FontData {
 static struct FontData data;
 
 
-} // end namespace GLXInterface
+} // namespace GLXInterface
 
+} // namespace gptam
 
 #endif

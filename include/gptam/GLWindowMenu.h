@@ -15,6 +15,8 @@
 #include "Persistence/PVars.h"
 #include "GLWindow2.h"
 
+namespace gptam {
+
 class GLWindowMenu
 {
  public:
@@ -69,6 +71,8 @@ class GLWindowMenu
   int mnLeftMostCoord;
   
 };
+
+} // namespace gptam
 
 #endif
 

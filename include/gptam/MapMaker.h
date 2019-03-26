@@ -27,6 +27,8 @@
 // Each MapPoint has an associated MapMakerData class
 // Where the mapmaker can store extra information
  
+namespace gptam {
+
 struct MapMakerData
 {
 public: // think itys public by default...
@@ -411,6 +413,7 @@ bool MapMaker::InitFromStereo(KeyFrame::Ptr pkF,     // First KF
   return true; 
 }
 
+} // namespace gptam
 
 #endif
 

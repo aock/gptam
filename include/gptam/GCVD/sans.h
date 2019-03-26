@@ -4,6 +4,7 @@
 
 #include "FontStructs.h"
 
+namespace gptam {
 
 GLXInterface::Point sans_vertices[] = {
 
@@ -409,5 +410,7 @@ GLXInterface::Font::Char sans_chars[] = {
 };
 
 GLXInterface::Font sans_font = { sans_vertices, sans_triangles, sans_lines, sans_chars, " $(,048<@DHLPTX\\`dhlptx|#'+/37;?CGKOSW[_cgkosw{\"&*.26:>BFJNRVZ^bfjnrvz~\t!%)-159=AEIMQUY]aeimquy}" };
+
+} // namespace gptam
 
 #endif

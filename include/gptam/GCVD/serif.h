@@ -4,6 +4,8 @@
 
 #include "FontStructs.h"
 
+namespace gptam {
+
 GLXInterface::Point serif_vertices[] = {
 
 
@@ -408,5 +410,7 @@ GLXInterface::Font::Char serif_chars[] = {
 };
 
 GLXInterface::Font serif_font = { serif_vertices, serif_triangles, serif_lines, serif_chars, " $(,048<@DHLPTX\\`dhlptx|#'+/37;?CGKOSW[_cgkosw{\"&*.26:>BFJNRVZ^bfjnrvz~\t!%)-159=AEIMQUY]aeimquy}" };
+
+} // namespace gptam
 
 #endif

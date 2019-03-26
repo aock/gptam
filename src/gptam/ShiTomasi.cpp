@@ -11,6 +11,8 @@
 
 #include "gptam/OpenCV.h"
 
+namespace gptam {
+
 double FindShiTomasiScoreAtPoint(cv::Mat_<uchar> &image, int nHalfBoxSize, cv::Point2i irCenter) {
   
   double dXX = 0;
@@ -40,5 +42,5 @@ double FindShiTomasiScoreAtPoint(cv::Mat_<uchar> &image, int nHalfBoxSize, cv::P
   return 0.5 * (dXX + dYY - sqrt( (dXX + dYY) * (dXX + dYY) - 4 * (dXX * dYY - dXY * dXY) ));
 }
 
-
+} // namespace gptam 
 

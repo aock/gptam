@@ -9,6 +9,8 @@
 #include "gptam/Map.h"
 #include "gptam/MapPoint.h"
 
+namespace gptam {
+
 Map::Map()
 {
   Reset();
@@ -55,4 +57,4 @@ void Map::EmptyTrash() {
 
 }
 
-
+} // namespace gptam

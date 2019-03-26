@@ -27,6 +27,9 @@
 
 
 using namespace std;
+
+namespace gptam {
+
 using namespace Persistence;
 
 // Constructor sets up internal reference variable to Map.
@@ -1860,14 +1863,4 @@ void MapMaker::GUICommandHandler(string sCommand, string sParams)  // Called by 
   exit(1);
 } 
 
-
-
-
-
-
-
-
-
-
-
-
+} // namespace gptam

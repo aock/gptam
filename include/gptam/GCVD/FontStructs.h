@@ -4,6 +4,8 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
 
+namespace gptam {
+
 namespace GLXInterface {
 
 struct Point {
@@ -70,6 +72,8 @@ struct Font {
     }
 };
 
-}
+} // namespace GLXInterface
+
+} // namespace gptam 
 
 #endif

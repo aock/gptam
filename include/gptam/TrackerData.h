@@ -6,6 +6,8 @@
 #include "PatchFinder.h"
 #include "ATANCamera.h"
 
+namespace gptam {
+
 // This class contains all the intermediate results associated with
 // a map-point that the tracker keeps up-to-date. TrackerData
 // basically handles all the tracker's point-projection jobs,
@@ -136,10 +138,7 @@ TrackerData(MapPoint::Ptr pMapPoint) : Point(pMapPoint) {};
   static cv::Size2i irImageSize;
 };
 
-
-
-
-
+} // namespace gptam
 
 #endif
 

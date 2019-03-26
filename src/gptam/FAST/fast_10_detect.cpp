@@ -6,6 +6,9 @@
 // This is mechanically generated code.
 
 using namespace std;
+
+namespace gptam {
+
 namespace FAST
 {
 void fast_corner_detect_plain_10(const cv::Mat_<uchar> &i, vector<cv::Point2i> &corners, int b) {
@@ -3170,4 +3173,7 @@ void fast_corner_detect_plain_10(const cv::Mat_<uchar> &i, vector<cv::Point2i> &
 		}
 	}
 }
-}
+
+} // namespace FAST
+
+} // namespace gptam

@@ -8,6 +8,7 @@
 
 using namespace std;
 
+namespace gptam {
 
 MapViewer::MapViewer(Map &map, GLWindow2 &glw): mMap(map), mGLWindow(glw)
 {
@@ -139,7 +140,7 @@ void MapViewer::DrawMap(SE3<> se3CamFromWorld)
   }
 
   mGLWindow.SetupViewport();
-  glClearColor(0,0,0,0);
+  ::glClearColor(0,0,0,0);
   glClearDepth(1);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glMatrixMode(GL_PROJECTION);
@@ -175,7 +176,7 @@ void MapViewer::SetupFrustum()
   glMatrixMode(GL_PROJECTION);  
   glLoadIdentity();
   double zNear = 0.03;
-  glFrustum(-zNear, zNear, 0.75*zNear,-0.75*zNear,zNear,50);
+  ::glFrustum(-zNear, zNear, 0.75*zNear,-0.75*zNear,zNear,50);
   glScalef(1,1,-1);
   return;
 };
@@ -231,3 +232,4 @@ void MapViewer::DrawCamera(SE3<> se3CfromW, bool bSmall)
 }
 
 
+} // namespace gptam

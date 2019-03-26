@@ -9,6 +9,7 @@
 //using namespace CVD;
 using namespace std;
 
+namespace gptam {
 
 namespace FAST
 {
@@ -101,4 +102,6 @@ void fast_nonmax_with_scores(const cv::Mat_<uchar> &im, const vector<cv::Point2i
 	nonmax_suppression_with_scores(corners, scores, max_corners);
 }
 
-}
+} // namespace FAST
+
+} // namespace gptam

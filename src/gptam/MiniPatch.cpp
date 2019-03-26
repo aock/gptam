@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+namespace gptam {
+
 // Scoring function. This is just a sum of squared differences!
 inline int MiniPatch::SSDAtPoint(cv::Mat_<uchar> &im, const cv::Point2i &ir)
 {
@@ -124,3 +126,5 @@ void MiniPatch::SampleFromImage(cv::Point2i irPos, cv::Mat_<uchar> &im)
 int MiniPatch::mnHalfPatchSize = 4;
 int MiniPatch::mnRange = 10;
 int MiniPatch::mnMaxSSD = 9999;
+
+} // namespace gptam

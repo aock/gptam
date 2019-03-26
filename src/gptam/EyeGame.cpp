@@ -9,6 +9,7 @@
 
 #include "gptam/GCVD/GLHelpers.h"
 
+namespace gptam {
 
 EyeGame::EyeGame()
 {
@@ -287,7 +288,4 @@ void EyeGame::MakeShadowTex()
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
-
-
-
-
+} // namespace gptam

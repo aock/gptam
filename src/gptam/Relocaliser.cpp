@@ -11,6 +11,9 @@
 #include "gptam/Persistence/instances.h"
 
 using namespace std;
+
+namespace gptam {
+
 using namespace Persistence;
 
 Relocaliser::Relocaliser(Map &map, ATANCamera &camera) : mMap(map), mCamera(camera) { }
@@ -65,3 +68,4 @@ void Relocaliser::ScoreKFs(KeyFrame::Ptr pKFCurrent)
     }
 }
 
+} // namespace gptam

@@ -14,6 +14,8 @@
 #include <algorithm>
 #include <cassert>
 
+namespace gptam {
+
 struct Tukey
 {
   inline static double FindSigmaSquared(std::vector<double> &vdErrorSquared);
@@ -192,6 +194,8 @@ inline double LeastSquares::FindSigmaSquared(std::vector<double> &vdErrorSquared
     dSum+=vdErrorSquared[i];
   return dSum / vdErrorSquared.size();
 }
+
+} // namespace gptam
 
 #endif
 

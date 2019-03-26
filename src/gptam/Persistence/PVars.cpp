@@ -14,12 +14,12 @@ int fnmatch(const char *, const char *, int ){
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence
 {
   
 	 
-
-
 	 std::map<std::string, std::string>		PV3::unmatched_tags;
          std::map<std::string, std::pair<BaseMap*,int> >	PV3::registered_type_and_trait;
 	 std::list<BaseMap*>					PV3::maps;
@@ -106,4 +106,9 @@ namespace Persistence
 		std::cerr << "! PV3:Parse warning setting " << type << " " << name << " from " << from << ": "
 				  << "junk is -->" << from.c_str()-e  << "<--" << std::endl;
 	}
-};
+
+} // namespace Persistence
+
+} // namespace gptam
+
+

@@ -15,6 +15,7 @@
 
 using namespace std;
 
+namespace gptam {
 
 cv::Mat_<float> CalibCornerPatch::mimSharedSourceTemplate;
 
@@ -366,12 +367,4 @@ cv::Mat_<float> CalibCornerPatch::Params::m2Warp() //2x2
   return m2Warp;
 }
 
-
-
-
-
-
-
-
-
-
+} // namespace gptam

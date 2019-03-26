@@ -8,6 +8,8 @@
 #include <iostream>
 #include <set>
 
+namespace gptam {
+
 namespace Persistence
 {
 	
@@ -78,6 +80,8 @@ namespace Persistence
 			int parseArguments( const int argc, char * argv[], int start = 1, const std::string prefix = "--", const std::string execKeyword = "exec" );
 	};
 
-}
+} // namespace Persistence
+
+} // namespace gptam
 
 #endif

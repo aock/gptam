@@ -20,6 +20,8 @@
 
 using namespace cv;
 
+namespace gptam {
+
 namespace Optimization {
 
 /// Performs Gauss-Newton weighted least squares computation.
@@ -242,6 +244,8 @@ public:
 
 };
 
-}
+} // namespace Optimization
+
+} // namespace gptam
 
 #endif

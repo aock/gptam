@@ -17,6 +17,7 @@
 
 #include "./GCVD/Addedutils.h"
 
+namespace gptam {
 
 class SmallBlurryImage
 {
@@ -46,7 +47,7 @@ protected:
   static cv::Size2i mirSize;
 };
 
-
+} // namespace gptam
 
 #endif
 

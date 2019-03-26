@@ -15,6 +15,8 @@
 
 using namespace std;
 
+namespace gptam {
+
 namespace Persistence
 {
 	// forward declarations, presumably in GUI_language
@@ -814,5 +816,7 @@ namespace Persistence
   void* GUI_impl::mpParserThread = NULL;
   
 
-}
+} // namespace Persistence
+
+} // namespace gptam
 
