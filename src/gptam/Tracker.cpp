@@ -159,10 +159,10 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
      // draw FAST free lying corners
      if(PV3::get<int>("Tracker.DrawFASTCorners",1, SILENT)) {
 	
-	  glColor3f(1,0,1);  glPointSize(1); glBegin(GL_POINTS);
-	  for(unsigned int i=0; i<pCurrentKF->aLevels[0].vCorners.size(); i++) 
-	   GLXInterface::glVertex(pCurrentKF->aLevels[0].vCorners[i]);
-	  glEnd();
+        glColor3f(1,0,1);  glPointSize(1); glBegin(GL_POINTS);
+          for(unsigned int i=0; i<pCurrentKF->aLevels[0].vCorners.size(); i++) 
+        GLXInterface::glVertex(pCurrentKF->aLevels[0].vCorners[i]);
+        glEnd();
       }
   }
   
@@ -207,14 +207,25 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
     mMessageForUser << "Pose: " << pos << angles << std::endl;
 	}
 	  
+  int min_dropped_frames = PV3::get<int>(
+    "Tracker.MapGrowing.MinDroppedFrames", 20, SILENT
+  );
+
+  int min_queue_size = PV3::get<int>(
+    "Tracker.MapGrowing.MinQueueSize", 3, SILENT
+  );
+  
 	// Heuristics to check if a key-frame should be added to the map:
 	// A lot of papers have been written on how to to this......................
-	if(  mTrackingQuality == GOOD &&
+  
+  // TODO add parameter for this
+
+  if(  mTrackingQuality == GOOD &&
 	     mMapMaker.NeedNewKeyFrame(pCurrentKF) &&
-	     mnFrame - mnLastKeyFrameDropped > 20  &&
-	     mMapMaker.QueueSize() < 3
+	     mnFrame - mnLastKeyFrameDropped > min_dropped_frames  &&
+	     mMapMaker.QueueSize() < min_queue_size
 	  ) {
-	      //mMessageForUser << " Adding key-frame.";
+	      mMessageForUser << " Grow map.";
 	      //cout <<"Adding keyframe! "<<endl;
 	      AddNewKeyFrame();
 	    }
@@ -534,7 +545,7 @@ void Tracker::TrailTracking_Start()
   // George: Had to define an order function, possibly because there is no way to break ties in terms of second element (size)in the pair
   sort(vCornersAndSTScores.begin(), vCornersAndSTScores.end(), cornerCompare );  // Sort according to Shi-Tomasi score
   // maximum 1000 (by default) points to add (we will be decreasing upon insertion)
-  int nToAdd = PV3::get<int>("MaxInitialTrails", 1000, SILENT);
+  int nToAdd = PV3::get<int>("Tracker.InitMap.MaxInitialTrails", 1000, SILENT);
   for(unsigned int i = 0; i<vCornersAndSTScores.size() && nToAdd > 0; i++) {
     
     //cout <<"DEBUG: "<<i<<" Corner score : "<<vCornersAndSTScores[i].first<<endl;
