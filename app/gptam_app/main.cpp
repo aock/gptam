@@ -25,8 +25,14 @@ int main(int argc, char** argv)
   cout << "   " << endl;
   cout << endl;
 
-  cout << "  Parsing settings.cfg ...." << endl;
-  GUI.LoadFile("settings.cfg");
+  if(argc > 1)
+  {
+    cout << "  Parsing " << argv[1] <<  " ...." << endl;
+    GUI.LoadFile(argv[1]);
+  } else {
+    cout << "  Parsing settings.cfg ...." << endl;
+    GUI.LoadFile("settings.cfg");
+  }
   
   GUI.StartParserThread(); // Start parsing of the console input
   atexit(GUI.StopParserThread);

@@ -53,8 +53,6 @@ void Map::deleteBadPoints() {
 void Map::EmptyTrash() {
   
   vpPointsTrash.clear();
-  cout <<"DEBUG: Ditched "<<vpPointsTrash.size()<<" trashed map points! I hope..."<<endl;
-
 }
 
 } // namespace gptam

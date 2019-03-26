@@ -60,6 +60,7 @@ protected:
   void Reset();                   // Restart from scratch. Also tells the mapmaker to reset itself.
   void RenderGrid();              // Draws the reference grid
 
+  void AutoTrackForInitialMap();
   // The following members are used for initial map tracking (to get the first stereo pair and correspondences):
   void TrackForInitialMap();      // This is called by TrackFrame if there is not a map yet.
   enum {TRAIL_TRACKING_NOT_STARTED, 

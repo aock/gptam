@@ -95,7 +95,6 @@ void Tracker::Reset()
   // for an abort-check during calculation, so sleep while waiting.
   // MapMaker will also clear the map.
   mMapMaker.RequestReset();
-  cout <<"Waiting for mapmaker to reset ..."<<endl; 
   
   while(!mMapMaker.ResetDone())
 #ifndef WIN32
@@ -231,9 +230,20 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
 	    }
      }
      if(mbDraw) RenderGrid();
-  } 
-  // If there is no map, try to make one.
-  else TrackForInitialMap(); 
+  } else {
+    // If there is no map, try to make one.
+
+    bool auto_init = PV3::get<bool>("Tracker.AutoInit", false, SILENT);
+
+    if(auto_init) {
+      AutoTrackForInitialMap();
+    } else {
+      TrackForInitialMap(); 
+    }
+    
+    
+    
+  }
   
   // GUI interface
   while(!mvQueuedCommands.empty()) {
@@ -252,7 +262,7 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
 bool Tracker::AttemptRecovery()
 {
   bool bRelocGood = mRelocaliser.AttemptRecovery(pCurrentKF);
-  
+
   if(!bRelocGood) return false;
   
   SE3<> se3Best = mRelocaliser.BestPose();
@@ -357,6 +367,65 @@ void Tracker::GUICommandHandler(string sCommand, string sParams) { // Called by 
   exit(1);
 }; 
 
+void Tracker::AutoTrackForInitialMap()
+{
+  static pvar3<int> gvnMaxSSD("Tracker.MiniPatchMaxSSD", 100000, SILENT);
+  MiniPatch::mnMaxSSD = *gvnMaxSSD;
+
+  if(mnInitialStage == TRAIL_TRACKING_NOT_STARTED) {
+    mbUserPressedSpacebar = false;
+	  TrailTracking_Start();
+	  mnInitialStage = TRAIL_TRACKING_STARTED;
+  }
+  
+  if(mnInitialStage == TRAIL_TRACKING_STARTED) {
+    
+      int nGoodTrails = TrailTracking_Advance();  // This call actually tracks the trails
+      // if less than 10 features were good, then
+      // do it all over again.
+      int min_correspondences = PV3::get<int>(
+          "Tracker.InitMap.MinNumCorrespondences", 40, SILENT
+      );
+
+      
+      if(nGoodTrails < min_correspondences) { 
+        mMessageForUser << " Less than " 
+          << min_correspondences
+          << " correspondences found. Resetting... " << endl;
+	      Reset();
+	      return;
+      }
+
+      double min_distance = PV3::get<double>(
+          "Tracker.InitMap.MinCorrespondenceDistance", 40.0, SILENT
+      );
+
+      double avg_distance = 0.0; 
+
+      for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++) {
+        avg_distance += cv::norm(i->irCurrentPos - i->irInitialPos);
+      }
+
+      avg_distance /= static_cast<double>(nGoodTrails);
+
+      if(avg_distance > min_distance) {
+        // init map
+        vector<pair<cv::Point2i, cv::Point2i> > vMatches;   // This is the format the mapmaker wants for the stereo pairs
+        for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++)
+        {
+          vMatches.push_back(
+            pair<cv::Point2i, cv::Point2i>(i->irInitialPos, i->irCurrentPos)
+          );
+        }
+
+        mMapMaker.InitFromStereo<EssentialInit>(pFirstKF, pCurrentKF, vMatches, mse3CamFromWorld);  
+        mnInitialStage = TRAIL_TRACKING_COMPLETE;
+      }
+
+  }
+
+}
+
 // Routine for establishing the initial map. This requires two spacebar presses from the user
 // to define the first two key-frames. Salient points are tracked between the two keyframes
 // using cheap frame-to-frame tracking (which is very brittle - quick camera motion will
@@ -373,15 +442,16 @@ void Tracker::TrackForInitialMap()
     
     // First spacebar = this is the first keyframe
       if(mbUserPressedSpacebar)  {
-	
-	  mbUserPressedSpacebar = false;
-	  TrailTracking_Start();
-	  mnInitialStage = TRAIL_TRACKING_STARTED; // switch state to TRAIL_TRACKING_STARTED 
+      
+        mbUserPressedSpacebar = false;
+        TrailTracking_Start();
+        mnInitialStage = TRAIL_TRACKING_STARTED; // switch state to TRAIL_TRACKING_STARTED 
 						   // (which implies that we are expecting the second KF anytime soon...)
       }
-      else
-	mMessageForUser << "Point camera at planar scene and press spacebar to start tracking for initial map." << endl;
-      return;
+      else {
+        mMessageForUser << "Point camera at planar scene and press spacebar to start tracking for initial map." << endl;
+        return;
+      }
   } // end the case of TRAIL_TRACKING_NOT_STARTED
   
   // Here we handle the case in which we aree waiting for the second KF
@@ -392,9 +462,9 @@ void Tracker::TrackForInitialMap()
       // do it all over again.
       
       if(nGoodTrails < 10) { 
-	  cout << " Less than 10 correspondences found. Resetting... "<<endl;
-	  Reset();
-	  return;
+        cout << " Less than 10 correspondences found. Resetting... "<<endl;
+        Reset();
+        return;
       }
       
       
@@ -402,20 +472,24 @@ void Tracker::TrackForInitialMap()
       // use the list of surviving Trail Matches for 20-view Reconstruction...
       if(mbUserPressedSpacebar) {
 	
-	  mbUserPressedSpacebar = false;
-	  // Unfortunately the mapmaker wont process trail structs, so we need to copy the matches into 
-	  // a "smaller" package (i.e. pair<Point2i, Point2i> )
-	  vector<pair<cv::Point2i, cv::Point2i> > vMatches;   // This is the format the mapmaker wants for the stereo pairs
-	  for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++)
-	    vMatches.push_back(pair<cv::Point2i, cv::Point2i>(i->irInitialPos, i->irCurrentPos));
-	  // Alright! Here comes the hot stuff: 2-view Camera pose and structure estimation...
-	  //
-	  // NOTE: Using the new templated InitFronStereo with the Essential Matrix Initializer
-	  ///      Feel free to change back to homography, but it really works better!
-	  //
-	  mMapMaker.InitFromStereo<EssentialInit>(pFirstKF, pCurrentKF, vMatches, mse3CamFromWorld);  
-	  mnInitialStage = TRAIL_TRACKING_COMPLETE;
-	  //cout <<"completed trail tracking and initialized from stereo! " <<endl;
+        mbUserPressedSpacebar = false;
+        // Unfortunately the mapmaker wont process trail structs, so we need to copy the matches into 
+        // a "smaller" package (i.e. pair<Point2i, Point2i> )
+        vector<pair<cv::Point2i, cv::Point2i> > vMatches;   // This is the format the mapmaker wants for the stereo pairs
+        for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++)
+        {
+          vMatches.push_back(
+            pair<cv::Point2i, cv::Point2i>(i->irInitialPos, i->irCurrentPos)
+          );
+        }
+        // Alright! Here comes the hot stuff: 2-view Camera pose and structure estimation...
+        //
+        // NOTE: Using the new templated InitFronStereo with the Essential Matrix Initializer
+        ///      Feel free to change back to homography, but it really works better!
+        //
+        mMapMaker.InitFromStereo<EssentialInit>(pFirstKF, pCurrentKF, vMatches, mse3CamFromWorld);  
+        mnInitialStage = TRAIL_TRACKING_COMPLETE;
+        //cout <<"completed trail tracking and initialized from stereo! " <<endl;
       }
       else
 	mMessageForUser << "Translate the camera slowly sideways, and press spacebar again to perform stereo init." << endl;
