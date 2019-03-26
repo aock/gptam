@@ -38,4 +38,6 @@ target_link_libraries(your_executable
     ${GPTAM_LIBRARIES}
 )
 ```
-
+# Examples
+## lib_usage_1
+- How to you can use the library with CMake. Therefore, the gptam executable is build.
