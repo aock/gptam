@@ -19,6 +19,12 @@
 #include <sstream>
 #include <vector>
 #include <list>
+#include <chrono>
+#include <future>
+#include <thread>
+#include <atomic>
+
+using namespace std::chrono_literals;
 
 namespace gptam {
 
@@ -61,6 +67,13 @@ protected:
   void RenderGrid();              // Draws the reference grid
 
   void AutoTrackForInitialMap();
+
+  void AutoTrackForInitialMap2();
+
+  void DrawTrailTrack();
+
+  void TestThread();
+
   // The following members are used for initial map tracking (to get the first stereo pair and correspondences):
   void TrackForInitialMap();      // This is called by TrackFrame if there is not a map yet.
   enum {TRAIL_TRACKING_NOT_STARTED, 
@@ -68,7 +81,15 @@ protected:
 	TRAIL_TRACKING_COMPLETE} mnInitialStage;  // How far are we towards making the initial map?
   void TrailTracking_Start();     // First frame of initial trail tracking. Called by TrackForInitialMap.
   int  TrailTracking_Advance();   // Steady-state of initial trail tracking. Called by TrackForInitialMap.
+
+  void TrailTracking_Start2();
+
+  int  TrailTracking_Advance_NoGL(list<Trail> mlTrails);
   std::list<Trail> mlTrails;      // Used by trail tracking
+  
+  std::vector<std::pair<cv::Point2i, cv::Point2i> > mGoodTrails;
+  std::vector<std::pair<cv::Point2i, cv::Point2i> > mBadTrails;
+
   KeyFrame::Ptr pFirstKF;              // First of the stereo pair
   KeyFrame::Ptr pPreviousFrameKF;      // Used by trail tracking to check married matches
   
@@ -107,9 +128,15 @@ protected:
   enum {BAD, DODGY, GOOD} mTrackingQuality;
   int mnLostFrames;
   
+
   // Relocalisation functions:
   bool AttemptRecovery();         // Called by TrackFrame if tracking is lost.
   bool mbJustRecoveredSoUseCoarse;// Always use coarse tracking after recovery!
+  enum {RUNNING, OFF} mRecoveryState;
+  std::chrono::time_point<std::chrono::steady_clock> mRecoveryStartTime;
+  std::shared_ptr<std::thread> mAutoInitThread;
+  std::atomic<bool> mAutoInitDone;
+
 
   // Frame-to-frame motion init:
   SmallBlurryImage *mpSBILastFrame;

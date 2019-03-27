@@ -58,7 +58,7 @@ Tracker::Tracker(cv::Size2i irVideoSize, const ATANCamera &c, Map &m, MapMaker &
 
   mpSBILastFrame = NULL;
   mpSBIThisFrame = NULL;
- 
+
   // Most of the initialisation is done in Reset()
   Reset();
   
@@ -220,10 +220,19 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
   
   // TODO add parameter for this
 
+  bool need_new_key_frame = mMapMaker.NeedNewKeyFrame(pCurrentKF);
+  const int frames_since_last_dropped = mnFrame - mnLastKeyFrameDropped;
+  const int map_queue_size = mMapMaker.QueueSize();
+
+  // cout << "GROWING STATS:" << endl;
+  // cout << "-- Need new frame: " << need_new_key_frame << endl;
+  // cout << "-- frames_since_last_dropped: " << frames_since_last_dropped << endl;
+  // cout << "-- map_queue_size: " << map_queue_size << endl;
+
   if(  mTrackingQuality == GOOD &&
-	     mMapMaker.NeedNewKeyFrame(pCurrentKF) &&
-	     mnFrame - mnLastKeyFrameDropped > min_dropped_frames  &&
-	     mMapMaker.QueueSize() < min_queue_size
+	     need_new_key_frame &&
+	     frames_since_last_dropped > min_dropped_frames  &&
+	     map_queue_size < min_queue_size
 	  ) {
 	      mMessageForUser << " Grow map.";
 	      //cout <<"Adding keyframe! "<<endl;
@@ -233,12 +242,12 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
     // (lost frames > 3): many frames where discarded. need to recover!!!!!
      else { 
 	
-	  mMessageForUser << "** Attempting recovery **.";
-	  if(AttemptRecovery()) {
-	    
-	      TrackMap();
-	      AssessTrackingQuality();
-	    }
+      mMessageForUser << "** Attempting recovery **.";
+      if(AttemptRecovery()) {
+        
+          TrackMap();
+          AssessTrackingQuality();
+        }
      }
      if(mbDraw) RenderGrid();
   } else {
@@ -247,12 +256,27 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
     bool auto_init = PV3::get<bool>("Tracker.AutoInit", false, SILENT);
 
     if(auto_init) {
+      // if(!mAutoInitThread)
+      // {
+      //   mAutoInitDone = false;
+      //   // segfault because of OpenGL 
+      //   mAutoInitThread.reset(
+      //     new std::thread(&Tracker::AutoTrackForInitialMap2, this)
+      //   );
+      // } else if(mAutoInitDone == true) {
+      //   std::cout << "auto init done!" << std::endl;
+      //   mAutoInitThread.reset();
+      //   mnInitialStage = TRAIL_TRACKING_COMPLETE;
+      // } else {
+      //   DrawTrailTrack();
+      //   std::cout << "auto init running ..." << std::endl;
+      // }
+      
       AutoTrackForInitialMap();
+      
     } else {
       TrackForInitialMap(); 
     }
-    
-    
     
   }
   
@@ -264,6 +288,13 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
   }
 }
 
+void Tracker::TestThread()
+{
+  cout << "thrreeead" << endl;
+  std::this_thread::sleep_for(3s);
+  mAutoInitDone = true;
+}
+
 // Try to relocalise in case tracking was lost.
 // Returns success or failure as a bool.
 // Actually, the SBI relocaliser will almost always return true, even if
@@ -272,16 +303,47 @@ void Tracker::TrackFrame(cv::Mat_<uchar> &imFrame, bool bDraw, cv::Mat &rgbFrame
 // but the way it is now gives a snappier response and I prefer it.
 bool Tracker::AttemptRecovery()
 {
-  bool bRelocGood = mRelocaliser.AttemptRecovery(pCurrentKF);
+  double dScore = mRelocaliser.AttemptRecoveryScored(pCurrentKF);
+  // cout << "dScore: " << dScore << endl;
+  if(mRecoveryState == OFF)
+  {
+    mRecoveryState = RUNNING;
+    mRecoveryStartTime = std::chrono::steady_clock::now();
+  }
 
-  if(!bRelocGood) return false;
+  if(dScore < PV3::get<double>("Reloc2.MaxScore", 9e6, SILENT)) {
+    
+    SE3<> se3Best = mRelocaliser.BestPose();
+    mse3CamFromWorld = mse3StartPos = se3Best;
+    mv6CameraVelocity = cv::Vec<float, 6>(0, 0, 0, 0, 0, 0); // avoiding the ::all(0) static method
+    mbJustRecoveredSoUseCoarse = true;
+    
+    mRecoveryState = OFF;
+
+    return true;
+  } else {
+
+    // check if maximum recovery time is exceeded
+    const double recovery_duration
+      = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - mRecoveryStartTime).count() / 1000.0;
+
+    // std::cout << "time elapsed: " << recovery_duration << endl;
+
+    if(recovery_duration > PV3::get<double>("Reloc2.MaxRelocTime", 10.0, SILENT))
+    {
+      // cout << "make new grid, threaded" << endl;
+      
+      mnInitialStage == TRAIL_TRACKING_NOT_STARTED;
+
+    }
+
+    SE3<> se3Best = mRelocaliser.BestPose();
+    mse3CamFromWorld = mse3StartPos = se3Best;
+    mv6CameraVelocity = cv::Vec<float, 6>(0, 0, 0, 0, 0, 0);
   
-  SE3<> se3Best = mRelocaliser.BestPose();
-  mse3CamFromWorld = mse3StartPos = se3Best;
-  mv6CameraVelocity = cv::Vec<float, 6>(0, 0, 0, 0, 0, 0); // avoiding the ::all(0) static method
-  mbJustRecoveredSoUseCoarse = true;
-  
-  return true;
+
+    return false;
+  }
 }
 
 // Draw the reference grid to give the user an idea of wether tracking is OK or not.
@@ -377,6 +439,78 @@ void Tracker::GUICommandHandler(string sCommand, string sParams) { // Called by 
   cout << "! Tracker::GUICommandHandler: unhandled command "<< sCommand << endl;
   exit(1);
 }; 
+
+
+void Tracker::AutoTrackForInitialMap2()
+{
+  static pvar3<int> gvnMaxSSD("Tracker.MiniPatchMaxSSD", 100000, SILENT);
+  MiniPatch::mnMaxSSD = *gvnMaxSSD;
+
+  double min_distance = PV3::get<double>(
+              "Tracker.InitMap.MinCorrespondenceDistance", 40.0, SILENT
+          );
+
+  int min_correspondences = PV3::get<int>(
+            "Tracker.InitMap.MinNumCorrespondences", 40, SILENT
+        );
+
+  bool success = false;
+
+
+  while(!success) {
+    mbUserPressedSpacebar = false;
+    TrailTracking_Start2();
+    cout << "start auto init" << endl;
+
+    bool error = false;
+    while(!error && !success) {
+      
+        cout << "track advance" << endl;
+        int nGoodTrails = TrailTracking_Advance_NoGL(mlTrails);  // This call actually tracks the trails
+        // if less than 10 features were good, then
+        // do it all over again.
+        
+        if(nGoodTrails < min_correspondences) { 
+          cout << " Less than " 
+            << min_correspondences
+            << " correspondences found. Resetting... " << endl;
+          Reset();
+          error = true;
+          
+        } else {
+          
+          double avg_distance = 0.0;
+
+          for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++) {
+            avg_distance += cv::norm(i->irCurrentPos - i->irInitialPos);
+          }
+
+          avg_distance /= static_cast<double>(nGoodTrails);
+          cout << "avg dist: " << avg_distance << endl;
+
+          if(avg_distance > min_distance) {
+            // init map
+            vector<pair<cv::Point2i, cv::Point2i> > vMatches;   // This is the format the mapmaker wants for the stereo pairs
+            for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); i++)
+            {
+              vMatches.push_back(
+                pair<cv::Point2i, cv::Point2i>(i->irInitialPos, i->irCurrentPos)
+              );
+            }
+
+            mMapMaker.InitFromStereo<EssentialInit>(pFirstKF, pCurrentKF, vMatches, mse3CamFromWorld);  
+            mnInitialStage = TRAIL_TRACKING_COMPLETE;
+            success = true;
+          }
+        }
+
+    }
+
+  }
+
+  mAutoInitDone = true;
+
+}
 
 void Tracker::AutoTrackForInitialMap()
 {
@@ -516,13 +650,76 @@ bool cornerCompare(const std::pair<double, cv::Point2i> &left, const std::pair<d
 
 }
 
+
+// The current frame is to be the first keyframe!
+void Tracker::TrailTracking_Start2()
+{
+    // MakeKeyFrame_rest() populates the candidates (i.e., the featurs in the first frame)
+    // which are essentially maximally suppressed FAST features, followed by a Shi-Tomasi 
+    // threshold-based (default is 70.0) short-listing.
+    pCurrentKF->MakeKeyFrame_Rest();
+    // Store the KF as "first"
+    pFirstKF = pCurrentKF; 
+    vector<pair<double, cv::Point2i> > vCornersAndSTScores;
+    // Copy candidates into a trivially sortable vector
+    // so that we can choose the image corners with max ST score
+    for(unsigned int i=0; i<pCurrentKF->aLevels[0].vCandidates.size(); i++)
+    {                                                                  
+        Candidate &c = pCurrentKF->aLevels[0].vCandidates[i];
+        //if(!mCurrentKF.aLevels[0].im.in_image_with_border(c.irLevelPos, MiniPatch::mnHalfPatchSize))
+        if ( !CvUtils::in_image_with_border( c.irLevelPos.y, 
+              c.irLevelPos.x,
+              pCurrentKF->aLevels[0].im, 
+              MiniPatch::mnHalfPatchSize, 
+              MiniPatch::mnHalfPatchSize 
+            )) 
+        {
+          continue;
+        } 
+        
+        vCornersAndSTScores.push_back( pair<double, cv::Point2i>(-c.dSTScore, c.irLevelPos) ); // negative so highest score first in sorted list
+    }
+  // George: Had to define an order function, possibly because there is no way to break ties in terms of second element (size)in the pair
+  sort(vCornersAndSTScores.begin(), vCornersAndSTScores.end(), cornerCompare );  // Sort according to Shi-Tomasi score
+  // maximum 1000 (by default) points to add (we will be decreasing upon insertion)
+  int nToAdd = PV3::get<int>("Tracker.InitMap.MaxInitialTrails", 1000, SILENT);
+  for(unsigned int i = 0; i<vCornersAndSTScores.size() && nToAdd > 0; i++)
+  {
+    
+    //cout <<"DEBUG: "<<i<<" Corner score : "<<vCornersAndSTScores[i].first<<endl;
+      if ( !CvUtils::in_image_with_border(vCornersAndSTScores[i].second.y, 
+					  vCornersAndSTScores[i].second.x,
+					  pCurrentKF->aLevels[0].im, 
+					  MiniPatch::mnHalfPatchSize, 
+					  MiniPatch::mnHalfPatchSize ))
+      {
+        continue;
+      }
+      // A trail struct is simply an initializing correspondence (first 2-views of the SLAM).
+      // It stores the MiniPatch of the original point and the respective locatrions in the first and second KF 
+      Trail t;
+      // copy the patch around the feature and store in the Trail's MiniPatch member
+      t.mPatch.SampleFromImage(vCornersAndSTScores[i].second, pCurrentKF->aLevels[0].im);
+      // store the initial position of the feature in the irInitialPos member
+      t.irInitialPos = vCornersAndSTScores[i].second;
+     // Also make the irCurrentPos equal to the original. For now....
+      t.irCurrentPos = t.irInitialPos;
+      // Store the TrailMatch for now...
+      mlTrails.push_back(t);
+      // decrease the number of remaining features to be added
+      nToAdd--;
+  }
+  pPreviousFrameKF = pFirstKF;  // Cache the curfrent KF as "mPreviousFrameKF". It will be useful in any case...
+  
+}
+
 // The current frame is to be the first keyframe!
 void Tracker::TrailTracking_Start()
 {
   // MakeKeyFrame_rest() populates the candidates (i.e., the featurs in the first frame)
   // which are essentially maximally suppressed FAST features, followed by a Shi-Tomasi 
   // threshold-based (default is 70.0) short-listing.
-  pCurrentKF->MakeKeyFrame_Rest();  
+  pCurrentKF->MakeKeyFrame_Rest();
   // Store the KF as "first"
   pFirstKF = pCurrentKF; 
   vector<pair<double, cv::Point2i> > vCornersAndSTScores;
@@ -573,6 +770,108 @@ void Tracker::TrailTracking_Start()
   
 }
 
+void Tracker::DrawTrailTrack() {
+  if(mbDraw) {
+    
+      glPointSize(5);
+      glLineWidth(2);
+      glEnable(GL_POINT_SMOOTH);
+      glEnable(GL_LINE_SMOOTH);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      glEnable(GL_BLEND);
+      glBegin(GL_LINES);
+
+      
+      for(auto corr : mBadTrails)
+      {
+        glColor3f(0,1,1);
+        glVertex2i(corr.first.x, corr.first.y);
+        glVertex2i(corr.second.x, corr.second.y);
+      }
+
+      for(auto corr: mGoodTrails)
+      {
+        glColor3f(1,1,0);
+        glVertex2i(corr.first.x, corr.first.y);
+        glColor3f(1,0,0);
+        glVertex2i(corr.second.x, corr.second.y);
+      }
+
+      glEnd();
+  }
+}
+
+
+// This function does the matching by generating a list of "Trail" matches
+// which correspond to the views that initiate the map (and SLAM). 
+// Backward matching filters-out a lot false matches here...
+int Tracker::TrailTracking_Advance_NoGL(list<Trail> mlTrails)
+{
+  int nGoodTrails = 0;
+  mGoodTrails.clear();
+  mBadTrails.clear();
+  
+  MiniPatch BackwardsPatch;
+  // GLOBAL READ
+  Level &lCurrentFrame = pCurrentKF->aLevels[0]; // The eth version has parametrized this 0-level...
+  // GLOBAL READ
+  Level &lPreviousFrame = pPreviousFrameKF->aLevels[0];
+  //cout <<" Initial number of trail matches : "<<mlTrails.size()<<endl;
+  // GLOBAL
+  for(list<Trail>::iterator i = mlTrails.begin(); i!=mlTrails.end(); ) {
+      
+      list<Trail>::iterator next = i; next++; // we need a "next" pointer for some reason
+      
+      Trail &trail = *i; // get a reference for the current trailmatch
+      cv::Point2i irStart = trail.irCurrentPos; // the original position
+      cv::Point2i irEnd = irStart;              // same as original; a good place to start looking!
+      
+      // This is a very simple half-way brute-force search method in a 15 x 15 neighborhood
+      // of the feature for a matching FAST corner in the new image
+      //cout <<"irEnd before the find : "<<irEnd<<endl;
+      bool bFound = trail.mPatch.FindPatch(irEnd, lCurrentFrame.im, 10, lCurrentFrame.vCorners);
+      
+	
+      // great! a match was found!
+      if(bFound) {
+        // Now we do the backward matching to see if we actually get the same match!
+        // So we sample the original image around the coordinates of the newly found match in the second ("irEnd"). 
+        BackwardsPatch.SampleFromImage(irEnd, lCurrentFrame.im);
+        cv::Point2i irBackWardsFound = irEnd;
+        // And search for a match again
+        bFound = BackwardsPatch.FindPatch(irBackWardsFound, lPreviousFrame.im, 10, lPreviousFrame.vCorners);
+        // if the match is not the same (more than 2 pixels apart), then set bFound to false.
+        if( (irBackWardsFound.x - irStart.x) * (irBackWardsFound.x - irStart.x) +  
+            (irBackWardsFound.y - irStart.y) * (irBackWardsFound.y - irStart.y) > 2) bFound = false;
+        else {
+          trail.irCurrentPos = irEnd;
+          nGoodTrails++;
+        }
+      }
+      // Draw the matches with nice colorings for bad ones
+      
+      if(!bFound) {
+        mBadTrails.push_back({trail.irInitialPos, trail.irCurrentPos});
+      } else {
+        mGoodTrails.push_back({trail.irInitialPos, trail.irCurrentPos});
+      }
+      
+      // Erase from list of trails if not found this frame.
+      if(!bFound) {
+        mlTrails.erase(i);
+      }
+
+      i = next;
+  } // end trails for-loop!
+  
+
+  // shift KF cache
+  pPreviousFrameKF = pCurrentKF;
+  
+  // Return the trailing matches
+  return nGoodTrails;
+}
+
 // This function does the matching by generating a list of "Trail" matches
 // which correspond to the views that initiate the map (and SLAM). 
 // Backward matching filters-out a lot false matches here...
@@ -611,19 +910,19 @@ int Tracker::TrailTracking_Advance()
 	
       // great! a match was found!
       if(bFound) {
-	// Now we do the backward matching to see if we actually get the same match!
-	// So we sample the original image around the coordinates of the newly found match in the second ("irEnd"). 
-	BackwardsPatch.SampleFromImage(irEnd, lCurrentFrame.im);
-	cv::Point2i irBackWardsFound = irEnd;
-	// And search for a match again
-	bFound = BackwardsPatch.FindPatch(irBackWardsFound, lPreviousFrame.im, 10, lPreviousFrame.vCorners);
-	// if the match is not the same (more than 2 pixels apart), then set bFound to false.
-	if( (irBackWardsFound.x - irStart.x) * (irBackWardsFound.x - irStart.x) +  
-	    (irBackWardsFound.y - irStart.y) * (irBackWardsFound.y - irStart.y) > 2) bFound = false;
-	else {
-	  trail.irCurrentPos = irEnd;
-	  nGoodTrails++;
-	}
+        // Now we do the backward matching to see if we actually get the same match!
+        // So we sample the original image around the coordinates of the newly found match in the second ("irEnd"). 
+        BackwardsPatch.SampleFromImage(irEnd, lCurrentFrame.im);
+        cv::Point2i irBackWardsFound = irEnd;
+        // And search for a match again
+        bFound = BackwardsPatch.FindPatch(irBackWardsFound, lPreviousFrame.im, 10, lPreviousFrame.vCorners);
+        // if the match is not the same (more than 2 pixels apart), then set bFound to false.
+        if( (irBackWardsFound.x - irStart.x) * (irBackWardsFound.x - irStart.x) +  
+            (irBackWardsFound.y - irStart.y) * (irBackWardsFound.y - irStart.y) > 2) bFound = false;
+        else {
+          trail.irCurrentPos = irEnd;
+          nGoodTrails++;
+        }
       }
       // Draw the matches with nice colorings for bad ones
       
@@ -1271,13 +1570,17 @@ void Tracker::AssessTrackingQuality()
 
       static pvar3<double> gvdQualityGood("Tracker.TrackingQualityGood", 0.3, SILENT);
       static pvar3<double> gvdQualityLost("Tracker.TrackingQualityLost", 0.13, SILENT);
+      // cout << "Quality:" << endl;
+      // cout << "-- dTotalFracFound: " << dTotalFracFound << endl;
+      // cout << "-- dLargeFracFound: " << dLargeFracFound << endl;
       
-      
-      if(dTotalFracFound > *gvdQualityGood) mTrackingQuality = GOOD; 
-      else 
-	if(dLargeFracFound < *gvdQualityLost) mTrackingQuality = BAD;
-      else
-	mTrackingQuality = DODGY;
+      if(dTotalFracFound > *gvdQualityGood){
+        mTrackingQuality = GOOD; 
+      } else if(dLargeFracFound < *gvdQualityLost) { 
+        mTrackingQuality = BAD;
+      } else {
+	      mTrackingQuality = DODGY;
+      }
   }
   
   if(mTrackingQuality == DODGY) {

@@ -26,6 +26,7 @@ class Relocaliser
 {
 public:
   Relocaliser(Map &map, ATANCamera &camera);
+  double AttemptRecoveryScored(KeyFrame::Ptr pKF);
   bool AttemptRecovery(KeyFrame::Ptr pKF);
   SE3<> BestPose();
   

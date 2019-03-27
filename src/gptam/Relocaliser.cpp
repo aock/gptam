@@ -23,7 +23,8 @@ SE3<> Relocaliser::BestPose()
   return mse3Best;
 }
 
-bool Relocaliser::AttemptRecovery(KeyFrame::Ptr pKFCurrent) {
+
+double Relocaliser::AttemptRecoveryScored(KeyFrame::Ptr pKFCurrent) {
   #ifndef NDEBUG
   cout <<"DEBUG: ========================================== Attempting Recovery!!!!"<<endl;
   #endif
@@ -43,6 +44,13 @@ bool Relocaliser::AttemptRecovery(KeyFrame::Ptr pKFCurrent) {
   
   SE3<> se3KeyFramePos = mMap.vpKeyFrames[mnBest]->se3CfromW;
   mse3Best = SmallBlurryImage::SE3fromSE2(mse2, mCamera) * se3KeyFramePos;
+  
+  return dScore;
+}
+
+bool Relocaliser::AttemptRecovery(KeyFrame::Ptr pKFCurrent) {
+  
+  const double dScore = AttemptRecoveryScored(pKFCurrent);
   
   if(dScore < PV3::get<double>("Reloc2.MaxScore", 9e6, SILENT))
     return true;
