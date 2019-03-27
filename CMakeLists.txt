@@ -37,6 +37,7 @@ add_subdirectory(src/gptam)
 ########## GPTAM APP  ###################
 add_subdirectory(app/gptam_app)
 add_subdirectory(app/gptam_camera_calibrator)
+add_subdirectory(app/gptam_localization)
 
 
 ########## CMAKE FILES #################
